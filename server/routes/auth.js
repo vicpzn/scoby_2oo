@@ -54,7 +54,6 @@ router.post("/signup", (req, res, next) => {
           firstName,
           password: hashedPassword,
         };
-
         User.create(newUser).then((newUserDocument) => {
           /** Down below this logs the user on signup.
            *  If you do not want this behaviour you could just send a 201 status
