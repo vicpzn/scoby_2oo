@@ -50,4 +50,7 @@ export default {
       .then((res) => res.data)
       .catch(errorHandler);
   },
+  post(endPoint, data) {
+    return service.post(endPoint, data);
+  },
 };

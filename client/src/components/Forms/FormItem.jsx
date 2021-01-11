@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
 import "../../styles/form.css";
+import apiHandler from "../../api/apiHandler";
+//import { withUser } from "../components/Auth/withUser";
 
 class ItemForm extends Component {
   state = {};
 
   handleChange = (event) => {
-    console.log("Wax On Wax Off");
+    console.log(event.target.name, event.target.value);
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -14,7 +16,30 @@ class ItemForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Wax On Wax Off");
+    const body = {
+      name: this.state.name,
+      description: this.state.description,
+      // image:
+      //  "https://cdn1.iconfinder.com/data/icons/gardening-filled-line/614/1935_-_Growing_Plant-512.png",
+      category: this.state.category,
+      quantity: this.state.quantity,
+      address: this.state.address,
+      location: {
+        type: this.state.location.type,
+        coordinates: this.state.location.coordinates,
+      },
+      formattedAddress: this.state.location.formattedAddress,
+      id_user: "5ffc83fb40cedd05f6f61010",
+    };
+
+    apiHandler
+      .post("/api/items", body)
+      .then((apiResponse) => {
+        console.log(apiResponse);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
@@ -28,13 +53,26 @@ class ItemForm extends Component {
     // This handle is passed as a callback to the autocomplete component.
     // Take a look at the data and see what you can get from it.
     // Look at the item model to know what you should retrieve and set as state.
-    console.log(place);
+
+    this.setState({
+      [place.place_type]: place.place_name,
+
+      ["location"]: {
+        ["type"]: place.geometry.type,
+        ["coordinates"]: [
+          place.geometry.coordinates[0],
+          place.geometry.coordinates[1],
+        ],
+
+        ["formattedAddress"]: place.place_name,
+      },
+    });
   };
 
   render() {
     return (
       <div className="ItemForm-container">
-        <form className="form">
+        <form className="form" onSubmit={this.handleSubmit}>
           <h2 className="title">Add Item</h2>
 
           <div className="form-group">
@@ -101,7 +139,7 @@ class ItemForm extends Component {
             </label>
             <textarea
               onChange={this.handleChange}
-              value={this.state.quantity}
+              value={this.state.description}
               name="description"
               id="description"
               className="text-area"
@@ -122,12 +160,25 @@ class ItemForm extends Component {
             <label className="label" htmlFor="contact">
               How do you want to be reached?
             </label>
+
             <div>
-              <input type="radio" />
+              <input
+                type="radio"
+                id="usermail"
+                name="contact"
+                value="usermail"
+                onChange={this.handleChange}
+              />
               user email
+              <input
+                type="radio"
+                id="phonenumber"
+                name="contact"
+                value="phonenumber"
+                onChange={this.handleChange}
+              />
+              contact phone number
             </div>
-            <input type="radio" />
-            contact phone number
           </div>
 
           <p className="message">

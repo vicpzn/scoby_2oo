@@ -20,6 +20,7 @@ class LocationAutoComplete extends Component {
   }
 
   handleSearchChange(e) {
+    console.log(e.target.value);
     this.setState({
       search: e.target.value,
       isLoading: true,
@@ -70,6 +71,7 @@ class LocationAutoComplete extends Component {
         <input
           className="input"
           type="text"
+          name="location"
           value={this.state.search}
           onChange={this.handleSearchChange}
           placeholder="Enter an address"

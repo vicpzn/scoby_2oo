@@ -1,5 +1,3 @@
-/*GET	/api/items	Gets all the items in the DB*/
-
 var express = require("express");
 var router = express.Router();
 const ItemModel = require("../models/Item");
