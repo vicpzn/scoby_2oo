@@ -81,7 +81,8 @@ router.post("/signup", (req, res, next) => {
 router.get("/isLoggedIn", (req, res, next) => {
   // If currentUser is defined in the session it means the user is logged in.
   if (req.session.currentUser) {
-    User.findById(req.session.currentUser)
+    const id = req.session.currentUser._id;
+    User.findById(id)
       .select("-password") // Remove the password from the query.
       .then((userDocument) => {
         res.status(200).json(userDocument);

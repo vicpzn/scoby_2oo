@@ -3,7 +3,7 @@ import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const Map = ReactMapboxGl({
-  accessToken: "process.env.REACT_APP_MAPBOX_TOKEN",
+  accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
 });
 
 const Home = (props) => {
