@@ -1,29 +1,51 @@
 import React from "react";
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
+import apiHandler from "./../api/apiHandler";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
 });
 
-const Home = (props) => {
-  // Implement react map box here.
-  return (
-    <div>
-      <Map
-        style="mapbox://styles/mapbox/streets-v9"
-        containerStyle={{
-          height: "100vh",
-          width: "100vw",
-        }}
-      >
-        <Layer type="symbol" id="marker" layout={{ "icon-image": "marker-15" }}>
-          <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
-        </Layer>
-      </Map>
-      <p>On home /</p>
-    </div>
-  );
-};
+class Home extends React.Component {
+  state = {
+    allItems: [],
+  };
+
+  componentDidMount() {
+    apiHandler
+      .getItems()
+      .then((items) => {
+        this.setState({ allItems: items });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  render() {
+    return (
+      <div>
+        <Map
+          style="mapbox://styles/mapbox/streets-v9"
+          containerStyle={{
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          {this.state.allItems.map((item) => (
+            <Marker
+              key={item._id}
+              coordinates={item.location.coordinates}
+              anchor="bottom"
+              style={{ backgroundColor: "white", border: "1px solid black" }}
+              onClick={() => console.log(item)}
+            >
+              <img style={{ width: "50px" }} src={item.image} alt={item.name} />
+            </Marker>
+          ))}
+        </Map>
+      </div>
+    );
+  }
+}
 
 export default Home;
