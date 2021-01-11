@@ -101,7 +101,7 @@ class ItemForm extends Component {
             </label>
             <textarea
               onChange={this.handleChange}
-              value={this.state.quantity}
+              value={this.state.description}
               name="description"
               id="description"
               className="text-area"
