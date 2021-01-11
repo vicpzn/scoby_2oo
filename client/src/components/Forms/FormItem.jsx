@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
 import "../../styles/form.css";
 import apiHandler from "../../api/apiHandler";
-//import { withUser } from "../components/Auth/withUser";
+import { withUser } from "../Auth/withUser";
 
 class ItemForm extends Component {
   state = {};
 
   handleChange = (event) => {
-    console.log(event.target.name, event.target.value);
+    console.log(this.props.authContext.user._id);
+
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -29,7 +30,7 @@ class ItemForm extends Component {
         coordinates: this.state.location.coordinates,
       },
       formattedAddress: this.state.location.formattedAddress,
-      id_user: "5ffc83fb40cedd05f6f61010",
+      id_user: this.props.authContext.user._id,
     };
 
     apiHandler
@@ -194,4 +195,4 @@ class ItemForm extends Component {
   }
 }
 
-export default ItemForm;
+export default withUser(ItemForm);
