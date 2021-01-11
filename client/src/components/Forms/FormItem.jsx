@@ -5,10 +5,12 @@ import "../../styles/form.css";
 class ItemForm extends Component {
   state = {};
 
-  handleChange(event) {
+  handleChange = (event) => {
     console.log("Wax On Wax Off");
-    this.setState({});
-  }
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -44,6 +46,8 @@ class ItemForm extends Component {
               className="input"
               type="text"
               onChange={this.handleChange}
+              value={this.state.name}
+              name="name"
               placeholder="What are you giving away ?"
             />
           </div>
@@ -53,7 +57,13 @@ class ItemForm extends Component {
               Category
             </label>
 
-            <select id="category" defaultValue="-1">
+            <select
+              onChange={this.handleChange}
+              value={this.state.category}
+              name="category"
+              id="category"
+              defaultValue="-1"
+            >
               <option value="-1" disabled>
                 Select a category
               </option>
@@ -68,7 +78,14 @@ class ItemForm extends Component {
             <label className="label" htmlFor="quantity">
               Quantity
             </label>
-            <input className="input" id="quantity" type="number" />
+            <input
+              onChange={this.handleChange}
+              value={this.state.quantity}
+              name="quantity"
+              className="input"
+              id="quantity"
+              type="number"
+            />
           </div>
 
           <div className="form-group">
@@ -83,6 +100,9 @@ class ItemForm extends Component {
               Description
             </label>
             <textarea
+              onChange={this.handleChange}
+              value={this.state.quantity}
+              name="description"
               id="description"
               className="text-area"
               placeholder="Tell us something about this item"
