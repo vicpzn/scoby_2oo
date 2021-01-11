@@ -10,6 +10,7 @@ const Map = ReactMapboxGl({
 class Home extends React.Component {
   state = {
     allItems: [],
+    selectedItem: null,
   };
 
   componentDidMount() {
@@ -30,6 +31,7 @@ class Home extends React.Component {
             height: "100vh",
             width: "100vw",
           }}
+          center={[2.3315, 48.8567]}
         >
           {this.state.allItems.map((item) => (
             <Marker
@@ -37,7 +39,9 @@ class Home extends React.Component {
               coordinates={item.location.coordinates}
               anchor="bottom"
               style={{ backgroundColor: "white", border: "1px solid black" }}
-              onClick={() => console.log(item)}
+              onClick={() => {
+                this.setState({ selectedItem: item });
+              }}
             >
               <img style={{ width: "50px" }} src={item.image} alt={item.name} />
             </Marker>
