@@ -1,12 +1,26 @@
 const express = require("express");
 const router = express.Router();
+const UserModel = require("./../models/User");
 
-router.patch("/me", function (req, res, next) {
-  console.log(req.session.currentUser);
+router.get("/me", async (req, res, next) => {
+  try {
+    const currentUser = await UserModel.findById(req.session.currentUser);
+    console.log(currentUser);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get("/me", function (req, res, next) {
-  console.log("hello");
+router.patch("/me", async (req, res, next) => {
+  try {
+    const currentUser = await UserModel.findByIdAndUpdate(
+      req.session.currentUser,
+      req.body
+    );
+    console.log(currentUser);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
