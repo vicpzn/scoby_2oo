@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const ItemModel = require("../models/Item");
+const uploader = require("../config/cloudinary");
 
 /*GET	/api/items	Gets all the items in the DB*/
 router.get("/", (req, res, next) => {
@@ -19,7 +20,7 @@ router.get("/:id", (req, res, next) => {
 
 //POST	/api/items	Create an item in the DB	Requires auth.
 
-router.post("/", (req, res, next) => {
+router.post("/", uploader.single("image"), (req, res, next) => {
   ItemModel.create(req.body).then((itemDocuments) => {
     res.status(201).json(itemDocuments);
   });
