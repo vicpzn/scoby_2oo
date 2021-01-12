@@ -58,6 +58,13 @@ export default {
       .catch(errorHandler);
   },
 
+  getSingleUser(id) {
+    return service
+      .get(id)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
   deleteItem(id) {
     return this.service
       .delete(id)

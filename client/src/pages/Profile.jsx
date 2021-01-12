@@ -8,6 +8,7 @@ import "../styles/CardItem.css";
 class Profile extends Component {
   state = {
     allItems: [],
+    user: [],
   };
 
   handleChange = (event) => {
