@@ -12,6 +12,9 @@ const userSchema = new Schema({
   email: String,
   password: String,
   city: String,
+  phoneNumber: { type: String, default: "" },
+
+  secondaryEmail: String,
   contact: {
     type: Schema.Types.ObjectId,
     ref: "Contact",

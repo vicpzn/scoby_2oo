@@ -23,6 +23,7 @@ class FormSignup extends Component {
     apiHandler
       .signup(this.state)
       .then((data) => {
+        console.log(data);
         authContext.setUser(data);
         this.props.history.push("/");
       })
@@ -80,6 +81,18 @@ class FormSignup extends Component {
               Email
             </label>
             <input className="input" id="email" type="email" name="email" />
+          </div>
+
+          <div className="form-group">
+            <label className="label" htmlFor="phoneNumber">
+              Phone
+            </label>
+            <input
+              className="input"
+              id="phoneNumber"
+              type="text"
+              name="phoneNumber"
+            />
           </div>
 
           <div className="form-group">

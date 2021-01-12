@@ -37,7 +37,7 @@ router.post("/signin", (req, res, next) => {
 });
 
 router.post("/signup", (req, res, next) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, firstName, lastName, phoneNumber } = req.body;
 
   User.findOne({ email })
     .then((userDocument) => {
@@ -52,6 +52,7 @@ router.post("/signup", (req, res, next) => {
           email,
           lastName,
           firstName,
+          phoneNumber,
           password: hashedPassword,
         };
         User.create(newUser).then((newUserDocument) => {

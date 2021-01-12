@@ -32,6 +32,7 @@ class ItemForm extends Component {
       formattedAddress: this.state.location.formattedAddress,
       id_user: this.props.authContext.user._id,
     };
+    this.props.history.push("/");
 
     apiHandler
       .post("/api/items", body)
