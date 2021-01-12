@@ -1,12 +1,89 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withUser } from "../components/Auth/withUser";
+import apiHandler from "../api/apiHandler";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
 class Profile extends Component {
+  handleChange = (event) => {
+    const value = event.target.value;
+
+    const key = event.target.name;
+
+    this.setState({ [key]: value });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { authContext } = this.props;
+    const userId = authContext.user._id;
+    apiHandler
+      .patch("/api/users/me/" + userId, { phoneNumber: this.state.phoneNumber })
+      .then((data) => {
+        this.props.history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  componentDidMount() {
+    const { authContext } = this.props;
+    const userId = authContext.user._id;
+    apiHandler
+      .get("/api/users/me/" + userId)
+      .then((apiResponse) => {
+        console.log(apiResponse);
+        this.setState({
+          user: apiResponse.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  renderPhone() {
+    const { authContext } = this.props;
+    if (this.state.user.phoneNumber === "")
+      return (
+        <div className="user-contact">
+          <h4>Add a phone number</h4>
+          <form
+            className="form"
+            onChange={this.handleChange}
+            onSubmit={this.handleSubmit}
+          >
+            <div className="form-group">
+              <label className="label" htmlFor="phoneNumber">
+                Phone number
+              </label>
+              <input
+                className="input"
+                id="phoneNumber"
+                type="text"
+                name="phoneNumber"
+                placeholder="Add phone number"
+              />
+            </div>
+            <button className="form__button">Add phone number</button>
+          </form>
+        </div>
+      );
+    else {
+      return (
+        <div>
+          <h4> You phone number is</h4>
+          <p>{this.state.user.phoneNumber} </p>
+        </div>
+      );
+    }
+  }
+
   render() {
     const { authContext } = this.props;
     const { user } = authContext;
+    console.log(this.state);
 
     return (
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>
@@ -38,27 +115,7 @@ class Profile extends Component {
               Edit profile
             </Link>
           </div>
-
-          <div className="user-contact">
-            <h4>Add a phone number</h4>
-
-            <form className="form">
-              <div className="form-group">
-                <label className="label" htmlFor="phoneNumber">
-                  Phone number
-                </label>
-                <input
-                  className="input"
-                  id="phoneNumber"
-                  type="text"
-                  name="phoneNumber"
-                  placeholder="Add phone number"
-                />
-              </div>
-              <button className="form__button">Add phone number</button>
-            </form>
-          </div>
-
+          {this.renderPhone()}
           {/* Break whatever is belo  */}
           <div className="CardItem">
             <div className="item-empty">
