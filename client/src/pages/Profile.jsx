@@ -4,7 +4,12 @@ import { withUser } from "../components/Auth/withUser";
 import apiHandler from "../api/apiHandler";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
+
 class Profile extends Component {
+  state = {
+    allItems: [],
+  };
+
   handleChange = (event) => {
     const value = event.target.value;
 
@@ -29,19 +34,41 @@ class Profile extends Component {
 
   componentDidMount() {
     const { authContext } = this.props;
+    const { user } = authContext;
     const userId = authContext.user._id;
     apiHandler
-      .get("/api/users/me/" + userId)
-      .then((apiResponse) => {
-        console.log(apiResponse);
+      .getItems()
+      .then((items) => {
         this.setState({
-          user: apiResponse.data,
+          allItems: items.filter((item) => item.id_user === user._id),
+        });
+      })
+      .catch((err) => console.log(err));
+
+    apiHandler.get("/api/users/me/" + userId).then((apiResponse) => {
+      console.log(apiResponse);
+      this.setState({
+        user: apiResponse.data,
+      });
+    });
+  }
+
+  handleDelete = (id) => {
+    const { authContext } = this.props;
+    const { user } = authContext;
+    apiHandler
+      .deleteItem(`/api/items/${id}`)
+      .then(() => {
+        this.setState({
+          allItems: this.state.allItems.filter(
+            (item) => item.id_user !== user._id
+          ),
         });
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   renderPhone() {
     const { authContext } = this.props;
@@ -117,39 +144,49 @@ class Profile extends Component {
           </div>
           {this.renderPhone()}
           {/* Break whatever is belo  */}
-          <div className="CardItem">
-            <div className="item-empty">
-              <div className="round-image">
-                <img src="/media/personal-page-empty-state.svg" alt="" />
-              </div>
-              <p>You don't have any items :(</p>
-            </div>
-          </div>
-
-          <div className="CardItem">
-            <h3>Your items</h3>
-            <div className="item">
-              <div className="round-image">
-                <img
-                  src="https://vignette.wikia.nocookie.net/simpsons/images/1/14/Ralph_Wiggum.png/revision/latest/top-crop/width/360/height/360?cb=20100704163100"
-                  alt="item"
-                />
-              </div>
-              <div className="description">
-                <h2>Name of item</h2>
-                <h4>Quantity: 1 </h4>
-                <p>Description of the item</p>
-                <div className="buttons">
-                  <span>
-                    <button className="btn-secondary">Delete</button>
-                  </span>
-                  <span>
-                    <button className="btn-primary">Edit</button>
-                  </span>
+          {this.state.allItems.length === 0 && (
+            <div className="CardItem">
+              <div className="item-empty">
+                <div className="round-image">
+                  <img src="/media/personal-page-empty-state.svg" alt="" />
                 </div>
+                <p>You don't have any items :(</p>
               </div>
             </div>
-          </div>
+          )}
+
+          {this.state.allItems.length > 0 && (
+            <div className="CardItem">
+              <h3>Your items</h3>
+              {this.state.allItems.map((item) => (
+                <div className="item">
+                  <div className="round-image">
+                    <img src={item.image} alt={item.name} />
+                  </div>
+                  <div className="description">
+                    <h2>{item.name}</h2>
+                    <h4>Quantity: {item.quantity}</h4>
+                    <p>{item.description}</p>
+                    <div className="buttons">
+                      <span>
+                        <button
+                          onClick={() => this.handleDelete(item._id)}
+                          className="btn-secondary"
+                        >
+                          Delete
+                        </button>
+                      </span>
+                      <span>
+                        <Link to={`/item/edit/${item._id}`}>
+                          <button className="btn-primary">Edit</button>
+                        </Link>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     );

@@ -50,6 +50,21 @@ export default {
       .then((res) => res.data)
       .catch(errorHandler);
   },
+
+  getSingleItem(id) {
+    return service
+      .get(id)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
+  deleteItem(id) {
+    return this.service
+      .delete(id)
+      .then((res) => res.data)
+      .catch(errorHandler); //
+  },
+
   post(endPoint, data) {
     return service.post(endPoint, data);
   },
